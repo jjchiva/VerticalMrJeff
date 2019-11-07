@@ -4,7 +4,6 @@ import BBDD.Controller;
 import vista.Consola;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 
@@ -16,6 +15,8 @@ public class Main {
 
     static String nombre;
     static int precio;
+    static int id;
+    static int unidades_final;
     static int raciones;
 
     public static void main(String[] args) {
@@ -24,7 +25,6 @@ public class Main {
 
         pedidosUsuario = new ArrayList<>();
         productosComida = controller.listaProductosBBDD();
-        productosComida.sort(Comparator.comparing(Comida::getProducto));
 
         do {
             int numOpciones = productosComida.size();
@@ -40,8 +40,10 @@ public class Main {
 
             System.out.println("Cuántas raciones quieres?");
             raciones = consola.pedirNumero();
+            id = productosComida.get(seleccion - 1).getId();
+            System.out.println(id);
             precio = productosComida.get(seleccion - 1).getPrecio();
-            Comida pedido = new Comida(nombre, precio, raciones);
+            Comida pedido = new Comida(id , nombre, precio, raciones);
             pedidosUsuario.add(pedido);
 
             System.out.println("Añadido! Quieres algo más?");
@@ -60,14 +62,24 @@ public class Main {
         List<Ciudad> listaCiudad;
 
 
-        listaCiudad = controller.ciudadesBBDD();
+        int suma = pedidosUsuario.stream()
+                .mapToInt(pedidosUsuario_-> pedidosUsuario_.getPrecio())
+                .sum();
+
+        System.out.println(suma);
 
 
-        for (int i = 0; i < productosComida.size(); i++) {
-            System.out.println(productosComida.get(i));
+
+
+        for (int i = 0; i < pedidosUsuario.size(); i++) {
+            id = pedidosUsuario.get(i).getId();
+            unidades_final = productosComida.get(id - 1).getUnidades() - pedidosUsuario.get(i).getUnidades();
+
+            controller.actualizarUnidadesBD(id , unidades_final);
 
         }
 
-        controller.actulizaBBDD(1, 300);
+
+
     }
 }

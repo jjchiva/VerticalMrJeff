@@ -38,7 +38,7 @@ public class Controller {
 
                 rs = stmt.getResultSet();
                 while (rs.next()) {
-                    Ciudad ci = new Ciudad(rs.getString("nombre"),rs.getInt("distancia_km") , rs.getInt("tiempo_mins"));
+                    Ciudad ci = new Ciudad( rs.getInt("id") , rs.getString("nombre"),rs.getInt("distancia_km") , rs.getInt("tiempo_mins") );
                     listaCiudades.add(ci);
                 }
             }
@@ -62,7 +62,7 @@ public class Controller {
 
                 rs = stmt.getResultSet();
                 while (rs.next()) {
-                    Comida c = new Comida(rs.getString("producto"), rs.getInt("precio"), rs.getInt("unidades"));
+                    Comida c = new Comida(rs.getInt("id") , rs.getString("producto"), rs.getInt("precio"), rs.getInt("unidades"));
                     listaProductos.add(c);
                 }
             }
@@ -75,7 +75,7 @@ public class Controller {
         return listaProductos;
     }
 
-    public void actulizaBBDD(int id , int unidades) {
+    public void actualizarUnidadesBD(int id , int unidades) {
         this.conectar();
         try {
             preparedStatement = connect
@@ -102,7 +102,7 @@ public class Controller {
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Setup the connection with the DB
             connect = DriverManager.getConnection("jdbc:mysql://localhost/mrjeff?"
-                    + "&user=root&password=root");
+                    + "&user=root");
         } catch (ClassNotFoundException e) {
             System.out.println("Clase no encontrada");
             e.printStackTrace();

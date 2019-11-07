@@ -2,15 +2,21 @@ package modelo;
 
 public class Ciudad {
 
+    private int id;
     private String ciudad;
     private int distancia;
     private int tiempo;
 
-    public Ciudad(String ciudad, int distancia, int tiempo) {
+    public Ciudad(int id, String ciudad, int distancia, int tiempo) {
+        this.id = id;
         this.ciudad = ciudad;
         this.distancia = distancia;
         this.tiempo = tiempo;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) {this.id = id; }
 
     public String getCiudad() {
         return ciudad;
