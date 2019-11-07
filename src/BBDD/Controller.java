@@ -1,5 +1,8 @@
 package BBDD;
 
+import modelo.Ciudad;
+import modelo.Comida;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

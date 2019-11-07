@@ -1,4 +1,4 @@
-package BBDD;
+package modelo;
 
 public class Comida {
     private String producto;
