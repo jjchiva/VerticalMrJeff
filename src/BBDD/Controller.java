@@ -2,8 +2,14 @@ package BBDD;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
+
+    Connection connect = null;
+    Statement stmt;
+    ResultSet rs;
+    PreparedStatement preparedStatement;
 
     private static Controller instance = null;
 
@@ -17,116 +23,58 @@ public class Controller {
         return instance;
     }
 
-    public ArrayList<Ciudad> ciudadesBBDD() {
-        Connection connect = null;
-        Statement stmt;
-        ResultSet rs;
-        ArrayList<Ciudad> listaCiudad = new ArrayList<>();
+    public List<Ciudad> ciudadesBBDD() {
+        this.conectar();
 
+        List<Ciudad> listaCiudades = new ArrayList<>();
         try {
-
-            // This will load the MySQL driver, each DB has its own driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // Setup the connection with the DB
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/mrjeff?"
-                    + "&user=root");
-
             stmt = connect.createStatement();
             rs = stmt.executeQuery("SELECT * FROM ciudades");
 
-            // or alternatively, if you don't know ahead of time that
-            // the query will be a SELECT...
             if (stmt.execute("SELECT * FROM ciudades ")) {
 
                 rs = stmt.getResultSet();
                 while (rs.next()) {
                     Ciudad ci = new Ciudad(rs.getString("nombre"),rs.getInt("distancia_km") , rs.getInt("tiempo_mins"));
-                    listaCiudad.add(ci);
+                    listaCiudades.add(ci);
                 }
-
             }
-
-            if (rs != null) {
-                rs.close();
-            }
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
-
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
-        return listaCiudad;
+        this.cerrarConexion();
+        return listaCiudades;
 
     }
 
-    public ArrayList<Comida> listaProductosBBDD() {
-
-
-        Connection connect = null;
-        Statement stmt;
-        ResultSet rs;
-        ArrayList<Comida> productos = new ArrayList<Comida>();
-
+    public List<Comida> listaProductosBBDD() {
+        this.conectar();
+        List<Comida> listaProductos = new ArrayList<>();
         try {
-
-            // This will load the MySQL driver, each DB has its own driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // Setup the connection with the DB
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/mrjeff?"
-                    + "&user=root");
-
             stmt = connect.createStatement();
             rs = stmt.executeQuery("SELECT * FROM comidas");
 
-            // or alternatively, if you don't know ahead of time that
-            // the query will be a SELECT...
             if (stmt.execute("SELECT * FROM comidas ")) {
 
                 rs = stmt.getResultSet();
                 while (rs.next()) {
                     Comida c = new Comida(rs.getString("producto"), rs.getInt("precio"), rs.getInt("unidades"));
-                    productos.add(c);
+                    listaProductos.add(c);
                 }
-
             }
 
-            if (rs != null) {
-                rs.close();
-            }
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (connect != null) {
-                connect.close();
-            }
-
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
-        return productos;
+        this.cerrarConexion();
+        return listaProductos;
     }
 
-    public void actulizaBBDD(  int id , int unidades){
-
-        Connection connect = null;
-        Statement stmt;
-        ResultSet rs;
-        PreparedStatement preparedStatement;
-
+    public void actulizaBBDD(int id , int unidades) {
+        this.conectar();
         try {
-
-            // This will load the MySQL driver, each DB has its own driver
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            // Setup the connection with the DB
-            connect = DriverManager.getConnection("jdbc:mysql://localhost/mrjeff?"
-                    + "&user=root");
-
             preparedStatement = connect
                     .prepareStatement("update comidas set unidades = ? where id = ?");
             preparedStatement.setInt(1, unidades);
@@ -137,12 +85,44 @@ public class Controller {
                 preparedStatement.close();
             }
 
+
+        } catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+        this.cerrarConexion();
+    }
+
+    public void conectar() {
+        // This will load the MySQL driver, each DB has its own driver
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // Setup the connection with the DB
+            connect = DriverManager.getConnection("jdbc:mysql://localhost/mrjeff?"
+                    + "&user=root&password=root");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Clase no encontrada");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Error SQL");
+            e.printStackTrace();
+        }
+    }
+
+    public void cerrarConexion() {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
             if (connect != null) {
                 connect.close();
             }
-
-        }catch(SQLException | ClassNotFoundException e){
-            System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Error de SQL");
+            e.printStackTrace();
         }
     }
 
