@@ -1,3 +1,4 @@
+import BBDD.Ciudad;
 import BBDD.Comida;
 import BBDD.Controller;
 
@@ -9,10 +10,11 @@ public class Main {
         Controller controller =Controller.getInstance();
         int tiempo_mins = 0;
         ArrayList<Comida> productos_comida;
+        ArrayList<Ciudad> listaCiudad;
 
 
 
-        tiempo_mins = controller.ciudadesBBDD("Madrid");
+        listaCiudad = controller.ciudadesBBDD();
         productos_comida = controller.listaProductosBBDD();
 
 
@@ -23,10 +25,10 @@ public class Main {
 
 
 
-        if (tiempo_mins == 0){
+        if (1 == 0){
             System.out.println("Lo sentimos, por ahora no tenemos servicio en esa ciudad");
         }else{
-            System.out.println(tiempo_mins);
+            System.out.println(listaCiudad);
             System.out.println(productos_comida);
         }
 

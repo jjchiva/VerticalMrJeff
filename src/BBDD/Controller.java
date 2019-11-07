@@ -17,11 +17,11 @@ public class Controller {
         return instance;
     }
 
-    public int ciudadesBBDD(String ciudad) {
+    public ArrayList<Ciudad> ciudadesBBDD() {
         Connection connect = null;
         Statement stmt;
         ResultSet rs;
-        int tiempo_jugado = 0;
+        ArrayList<Ciudad> listaCiudad = new ArrayList<>();
 
         try {
 
@@ -36,11 +36,12 @@ public class Controller {
 
             // or alternatively, if you don't know ahead of time that
             // the query will be a SELECT...
-            if (stmt.execute("SELECT * FROM ciudades WHERE Nombre = '" +  ciudad + "'")) {
+            if (stmt.execute("SELECT * FROM ciudades ")) {
 
                 rs = stmt.getResultSet();
                 while (rs.next()) {
-                    tiempo_jugado = rs.getInt("tiempo_mins");
+                    Ciudad ci = new Ciudad(rs.getString("nombre"),rs.getInt("distancia_km") , rs.getInt("tiempo_mins"));
+                    listaCiudad.add(ci);
                 }
 
             }
@@ -59,7 +60,7 @@ public class Controller {
             System.out.println(e.getMessage());
         }
 
-        return tiempo_jugado;
+        return listaCiudad;
 
     }
 
