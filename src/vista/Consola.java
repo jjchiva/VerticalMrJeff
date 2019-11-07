@@ -1,5 +1,7 @@
 package vista;
 
+import java.text.NumberFormat;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Consola {
@@ -18,20 +20,41 @@ public class Consola {
 
     public int elegirOpcion(String[] opciones) {
         int opc = -1;
-        do {
-            mostrarOpciones(opciones);
-            System.out.print("> ");
-            opc = sc.nextInt();
-            sc.nextLine();
-        } while(opc < 1 || opc > opciones.length);
+        try {
+            do {
+                mostrarOpciones(opciones);
+                System.out.print("> ");
+
+                opc = sc.nextInt();
+                sc.nextLine();
+            } while (opc < 1 || opc > opciones.length);
             System.out.println("");
+        } catch(InputMismatchException e) { System.out.println("Número no válido"); }
         return opc;
+    }
+
+    public int pedirNumero() {
+        boolean esNumero = true;
+        int sel = -1;
+        do {
+            try {
+                System.out.print("> ");
+                sel = sc.nextInt();
+                sc.nextLine();
+                esNumero = true;
+            } catch(InputMismatchException e) {
+                System.out.println("Número no válido");
+                esNumero = false;
+            }
+        } while (!esNumero);
+        System.out.println("");
+        return sel;
     }
 
     public void mostrarOpciones(String[] opciones) {
         int i = 1;
         for (String o : opciones) {
-            System.out.println("[" + i + "] " + o );
+            System.out.println("[" + (i++) + "] " + o );
         }
     }
 }
