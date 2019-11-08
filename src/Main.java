@@ -13,27 +13,26 @@ public class Main {
     static Controller controller;
     static List<Comida> pedidosUsuario, productosComida;
     static List<Ciudad> listaCiudad;
+    static Ciudad ciudadSeleccionada;
     static int id , unidades_final;
 
     public static void mostrarCostePedido() {
 
         for (int i = 0; i < pedidosUsuario.size() ; i++) {
-            System.out.println(pedidosUsuario.get(i) + " x" +pedidosUsuario.get(i).getUnidades() + " " + (pedidosUsuario.get(i).getPrecio()*pedidosUsuario.get(i).getUnidades()) + "€");
+            Comida pedido = pedidosUsuario.get(i);
+            System.out.println(" - " + pedido.getProducto() + " x" + pedido.getUnidades() + " " + (pedido.getPrecio() * pedido.getUnidades()) + "€");
         }
         System.out.println();
 
         int precio_final = pedidosUsuario.stream()
                 .mapToInt(pedidosUsuario_-> pedidosUsuario_.getPrecio() * pedidosUsuario_.getUnidades())
                 .sum();
-        System.out.println("El coste de su pedido es de " + precio_final+"€");
+        System.out.println("El coste total de su pedido es de " + precio_final + "€\n");
     }
 
-    public static void mostrarCiudades() {
+    public static void mostrarYElegirCiudad() {
         listaCiudad = controller.ciudadesBBDD();
-        System.out.println("A qué ciudad quieres que te llevemos la comida?");
-        Ciudad c = consola.elegirCiudad(listaCiudad);
-        System.out.println("Perfecto! Enviaremos tu pedido a " + c.getCiudad() + " en aproximadamente " + c.getTiempo() + " minutos.");
-        System.out.println("Gracias por su compra!");
+        ciudadSeleccionada = consola.elegirCiudad(listaCiudad);
     }
 
     public static void main(String[] args) {
@@ -43,9 +42,18 @@ public class Main {
         pedidosUsuario = new ArrayList<>();
         productosComida = controller.listaProductosBBDD();
         pedidosUsuario = consola.elegirPedido(productosComida);
-        Comida.actualizarUnidadesBD(pedidosUsuario,productosComida);
-        mostrarCiudades();
 
+        mostrarYElegirCiudad();
+        System.out.println("\nDetalle: ");
         mostrarCostePedido();
+
+        boolean confirmado = consola.confirmarPedido(pedidosUsuario, ciudadSeleccionada);
+        if(confirmado) {
+            Comida.actualizarUnidadesBD(pedidosUsuario, productosComida);
+            System.out.println("Hecho. ¡Gracias por su compra!");
+            System.out.println("Enviaremos tu pedido a " + ciudadSeleccionada.getCiudad() + " en aproximadamente " + ciudadSeleccionada.getTiempo() + " minutos");
+        }
+        else
+            System.out.println("¡Transacción anulada!");
     }
 }
