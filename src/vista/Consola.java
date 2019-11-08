@@ -46,7 +46,7 @@ public class Consola {
                 System.out.println("Número no válido");
                 esNumero = false;
             }
-        } while (!esNumero);
+        } while (!esNumero || sel < 0);
         System.out.println("");
         return sel;
     }
