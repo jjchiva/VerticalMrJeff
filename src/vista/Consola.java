@@ -1,5 +1,6 @@
 package vista;
 
+import modelo.Ciudad;
 import modelo.Comida;
 
 import java.text.NumberFormat;
@@ -31,18 +32,8 @@ public class Consola {
     }
 
     public int elegirOpcion(String[] opciones) {
-        int opc = -1;
-        try {
-            do {
-                mostrarOpciones(opciones);
-                System.out.print("> ");
-
-                opc = sc.nextInt();
-                sc.nextLine();
-            } while (opc < 1 || opc > opciones.length);
-            System.out.println("");
-        } catch(InputMismatchException e) { System.out.println("Número no válido"); }
-        return opc;
+        mostrarOpciones(opciones);
+        return pedirNumero();
     }
 
     public int pedirNumero() {
@@ -53,7 +44,6 @@ public class Consola {
                 System.out.print("> ");
                 sel = sc.nextInt();
                 sc.nextLine();
-                esNumero = true;
             } catch(InputMismatchException e) {
                 System.out.println("Número no válido");
                 esNumero = false;
@@ -89,7 +79,7 @@ public class Consola {
             System.out.println("Cuántas raciones quieres?");
             raciones = this.pedirNumero();
             id = productosComida.get(seleccion - 1).getId();
-            System.out.println(id);
+
             precio = productosComida.get(seleccion - 1).getPrecio();
             Comida pedido = new Comida(id , nombre, precio, raciones);
             pedidosUsuario.add(pedido);
@@ -103,5 +93,20 @@ public class Consola {
         } while (seleccion == 1);
 
         return pedidosUsuario;
+    }
+
+    public Ciudad elegirCiudad(List<Ciudad> listaCiudades) {
+        Ciudad ciudadSeleccionada = null;
+
+        int numOpciones = listaCiudades.size();
+        opciones = new String[numOpciones];
+        for (int i = 0; i < numOpciones; i++) {
+            opciones[i] = listaCiudades.get(i).getCiudad();
+        }
+
+        seleccion = this.elegirOpcion(opciones);
+        ciudadSeleccionada = listaCiudades.get(seleccion - 1);
+
+        return ciudadSeleccionada;
     }
 }

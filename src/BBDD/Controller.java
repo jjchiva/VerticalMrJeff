@@ -87,8 +87,6 @@ public class Controller {
             if (preparedStatement != null) {
                 preparedStatement.close();
             }
-
-
         } catch(SQLException e){
             System.out.println(e.getMessage());
         }
@@ -102,7 +100,7 @@ public class Controller {
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Setup the connection with the DB
             connect = DriverManager.getConnection("jdbc:mysql://localhost/mrjeff?"
-                    + "&user=root");
+                    + "&user=root&password=root");
         } catch (ClassNotFoundException e) {
             System.out.println("Clase no encontrada");
             e.printStackTrace();

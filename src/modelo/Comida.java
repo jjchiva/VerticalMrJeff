@@ -52,7 +52,7 @@ public class Comida {
         return producto;
     }
 
-    public void actualizarUnidadesBD(List<Comida> pedidosUsuario , List<Comida> productosComida){
+    public static void actualizarUnidadesBD(List<Comida> pedidosUsuario , List<Comida> productosComida){
 
         Controller controller = Controller.getInstance();
 
