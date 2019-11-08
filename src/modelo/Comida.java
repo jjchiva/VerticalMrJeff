@@ -1,10 +1,17 @@
 package modelo;
 
+import BBDD.Controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Comida {
     private int id;
     private String producto;
     private int precio;
     private int unidades;
+
+    public Comida(){};
 
     public Comida(int id ,String producto, int precio, int unidades) {
         this.id = id;
@@ -43,5 +50,22 @@ public class Comida {
 
     public String toString() {
         return producto;
+    }
+
+    public void actualizarUnidadesBD(List<Comida> pedidosUsuario , List<Comida> productosComida){
+
+        Controller controller = Controller.getInstance();
+
+        int id , unidades_final;
+
+
+        for (int i = 0; i < pedidosUsuario.size(); i++) {
+            id = pedidosUsuario.get(i).getId();
+            unidades_final = productosComida.get(id - 1).getUnidades() - pedidosUsuario.get(i).getUnidades();
+
+            controller.actualizarUnidadesBD(id , unidades_final);
+
+        }
+
     }
 }
